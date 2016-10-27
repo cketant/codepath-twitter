@@ -20,7 +20,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 print("Got access token successfully")
             let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
             let nav = storyboard.instantiateViewController(withIdentifier: "mainNavigationController") as! UINavigationController
-            self.window?.rootViewController = nav
+            DispatchQueue.main.sync {
+                self.window?.rootViewController = nav
+            }
             
             }, failure: { (error: Error?) in
                 print(error?.localizedDescription)
@@ -29,7 +31,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        UINavigationBar.appearance().barTintColor = UIColor.white
+        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName:UIColor(red: (0/255.0), green: (172/255.0), blue: (237/255.0), alpha: 1.0)]
+        UIBarButtonItem.appearance().tintColor = UIColor(red: (0/255.0), green: (172/255.0), blue: (237/255.0), alpha: 1.0)
         return true
     }
 
