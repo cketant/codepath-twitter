@@ -18,6 +18,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let requestToken = BDBOAuth1Credential(queryString: url.query)
         TwitterClient.sharedInstance.fetchAccessToken(withPath: "oauth/access_token", method: "POST", requestToken: requestToken, success: { (accessToken: BDBOAuth1Credential?) in
                 print("Got access token successfully")
+            let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
+            let nav = storyboard.instantiateViewController(withIdentifier: "mainNavigationController") as! UINavigationController
+            self.window?.rootViewController = nav
+            
             }, failure: { (error: Error?) in
                 print(error?.localizedDescription)
         })
