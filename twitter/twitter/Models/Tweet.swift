@@ -13,6 +13,7 @@ class Tweet: NSObject {
     var timestamp: Date?
     var retweetCount: Int = 0
     var favoritesCount: Int = 0
+    var author: User?
     
     init(dictionary: NSDictionary) {
         self.text = dictionary["text"] as? String
@@ -23,6 +24,9 @@ class Tweet: NSObject {
             let formatter = DateFormatter()
             formatter.dateFormat = "EEE MMM d HH:MM::ss Z y"
             self.timestamp = formatter.date(from: createdTimeStampStr)
+        }
+        if let userDict = dictionary["user"]{
+            self.author = User(dictionary: userDict as! NSDictionary)
         }
     }
     

@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 print("Got access token successfully")
             let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
             let nav = storyboard.instantiateViewController(withIdentifier: "mainNavigationController") as! UINavigationController
-            DispatchQueue.main.sync {
+            DispatchQueue.main.async {
                 self.window?.rootViewController = nav
             }
             

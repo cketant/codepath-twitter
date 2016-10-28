@@ -24,4 +24,17 @@ class User: NSObject {
         }
         self.tagline = dictionary["description"] as? String
     }
+    
+    class func getTimeline(completion: @escaping ([Tweet]?, Error?) -> Void) -> Void {
+        TwitterClient.sharedInstance.get("1.1/statuses/home_timeline.json", parameters: nil, success: { (task: URLSessionDataTask, response: Any) in
+            if let response = response as? [NSDictionary]{
+                completion(Tweet.tweetsWithArray(dictionaries: response), nil)
+            }
+            }, failure: {(task: URLSessionDataTask?, error: Error) in
+                completion(nil, error)
+        })
+    }
+
+    
+    
 }
