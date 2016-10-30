@@ -9,12 +9,13 @@
 import UIKit
 import MBProgressHUD
 
-class TimelineViewController: UIViewController, UITabBarDelegate, UITableViewDataSource, UIScrollViewDelegate {
+class TimelineViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var loadingActivity: UIActivityIndicatorView!
     private var loadingMoreView: InfiniteScrollActivityView!
     let refreshControl: UIRefreshControl! = UIRefreshControl()
     private var tweets: [Tweet] = []
+    private var selectedTweet: Tweet!
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setup()
@@ -48,12 +49,20 @@ class TimelineViewController: UIViewController, UITabBarDelegate, UITableViewDat
         }
         if let user = tweet.author {
             cell.nameLabel.text = user.name
-            cell.screenNameLabel.text = user.screenname
+            cell.screenNameLabel.text = "@\(user.screenname!)"
             if let url = user.profileUrl{
                 cell.profileImageView.setImageWith(url)
+                cell.profileImageView.layer.cornerRadius = 5
+                cell.profileImageView.clipsToBounds = true
             }
         }
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath as IndexPath, animated: true)
+        self.selectedTweet = self.tweets[indexPath.row]
+        self.performSegue(withIdentifier: "detailTweetSegue", sender: nil)
     }
     
     // MARK: - Utils
@@ -81,15 +90,21 @@ class TimelineViewController: UIViewController, UITabBarDelegate, UITableViewDat
         self.loadingActivity.hidesWhenStopped = true
     }
     
-
-    /*
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+        if segue.identifier == "detailTweetSegue" {
+            let vc = segue.destination as! TweetDetailViewController
+            vc.tweet = self.selectedTweet
+        }else{
+            let vc = segue.destination as! ComposeTweetViewController
+            vc.author = 
+        }
+        
     }
-    */
+ 
 
 }

@@ -35,6 +35,9 @@ class User: NSObject {
         })
     }
 
+    static func currentUser(){
+        
+    }
     
     
 }
