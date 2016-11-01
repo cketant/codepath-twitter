@@ -19,7 +19,6 @@ class LoginViewController: UIViewController {
     @IBAction func login(sender: UIButton){
         TwitterClient.sharedInstance.deauthorize()
         TwitterClient.sharedInstance.fetchRequestToken(withPath: "oauth/request_token", method: "POST", callbackURL: NSURL(string: "codepath-twitter-clone://oauth") as URL!, scope: nil, success: { (requestToken: BDBOAuth1Credential?) in
-            print("I got a token")
             let authUrl = URL(string: "https://api.twitter.com/oauth/authorize?oauth_token=\(requestToken!.token!)")!
             UIApplication.shared.open(authUrl, completionHandler: { (isComplete: Bool) in
 

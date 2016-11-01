@@ -17,12 +17,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
         let requestToken = BDBOAuth1Credential(queryString: url.query)
         TwitterClient.sharedInstance.fetchAccessToken(withPath: "oauth/access_token", method: "POST", requestToken: requestToken, success: { (accessToken: BDBOAuth1Credential?) in
-                print("Got access token successfully")
+            let defaults = UserDefaults.standard
+            defaults.set(accessToken?.token, forKey: "kAccessToken")
+            defaults.set(accessToken?.secret, forKey: "kSecret")
             let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
             let nav = storyboard.instantiateViewController(withIdentifier: "mainNavigationController") as! UINavigationController
-            DispatchQueue.main.async {
-                self.window?.rootViewController = nav
-            }
+            TwitterClient.sharedInstance.getCurrentUser(completion: { (currentUser: User?, error: Error?) in
+                DispatchQueue.main.async {
+                    self.window?.rootViewController = nav
+                }
+
+            })
             
             }, failure: { (error: Error?) in
                 print(error?.localizedDescription)
@@ -34,6 +39,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().barTintColor = UIColor.white
         UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName:UIColor(red: (0/255.0), green: (172/255.0), blue: (237/255.0), alpha: 1.0)]
         UIBarButtonItem.appearance().tintColor = UIColor(red: (0/255.0), green: (172/255.0), blue: (237/255.0), alpha: 1.0)
+        let defaults = UserDefaults.standard
+        if  defaults.object(forKey: "kAccessToken") != nil && defaults.object(forKey: "kSecret") != nil{
+            let secret: String = defaults.object(forKey: "kSecret") as! String
+            let token: String = defaults.object(forKey: "kAccessToken") as! String
+            let accessToken = BDBOAuth1Credential(token: token, secret: secret, expiration: nil)
+            TwitterClient.sharedInstance.requestSerializer.saveAccessToken(accessToken)
+            if TwitterClient.sharedInstance.isAuthorized {
+                let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
+                    let nav = storyboard.instantiateViewController(withIdentifier: "mainNavigationController") as! UINavigationController
+                    TwitterClient.sharedInstance.getCurrentUser(completion: { (currentUser: User?, error: Error?) in
+                        DispatchQueue.main.async {
+                            self.window?.rootViewController = nav
+                        }
+                        
+                    })
+                }
+        }
         return true
     }
 

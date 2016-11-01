@@ -25,19 +25,21 @@ class User: NSObject {
         self.tagline = dictionary["description"] as? String
     }
     
-    class func getTimeline(completion: @escaping ([Tweet]?, Error?) -> Void) -> Void {
-        TwitterClient.sharedInstance.get("1.1/statuses/home_timeline.json", parameters: nil, success: { (task: URLSessionDataTask, response: Any) in
+    class func getTimeline(count: Int = 20, sinceId: String = "", completion: @escaping ([Tweet]?, Error?) -> Void) -> Void {
+        var parameters: [String : AnyObject] = [:]
+        parameters["count"] = count as AnyObject?
+        if !sinceId.isEmpty {
+            parameters["since_id"] = sinceId as AnyObject?
+        }
+        TwitterClient.sharedInstance.get("1.1/statuses/home_timeline.json", parameters: parameters, success: { (task: URLSessionDataTask, response: Any) in
             if let response = response as? [NSDictionary]{
-                completion(Tweet.tweetsWithArray(dictionaries: response), nil)
+                let sortedTweets = Tweet.tweetsWithArray(dictionaries: response).sorted(by: {$0.timestamp?.compare($1.timestamp!) == .orderedAscending})
+                completion(sortedTweets, nil)
             }
             }, failure: {(task: URLSessionDataTask?, error: Error) in
                 completion(nil, error)
         })
     }
 
-    static func currentUser(){
-        
-    }
-    
     
 }

@@ -9,6 +9,7 @@
 import UIKit
 
 class Tweet: NSObject {
+    var stringId: String?
     var text: String?
     var timestamp: Date?
     var retweetCount: Int = 0
@@ -16,13 +17,14 @@ class Tweet: NSObject {
     var author: User?
     
     init(dictionary: NSDictionary) {
+        self.stringId = dictionary["id_str"] as? String
         self.text = dictionary["text"] as? String
         self.retweetCount = (dictionary["retweet_count"] as? Int) ?? 0
         self.favoritesCount = (dictionary["favourites_count"] as? Int) ?? 0
         let createdTimeStampStr = dictionary["created_at"] as? String
         if let createdTimeStampStr = createdTimeStampStr{
             let formatter = DateFormatter()
-            formatter.dateFormat = "EEE MMM d HH:MM::ss Z y"
+            formatter.dateFormat = "EEE MMM dd hh:mm:ss +zzzz yyy"
             self.timestamp = formatter.date(from: createdTimeStampStr)
         }
         if let userDict = dictionary["user"]{
@@ -37,5 +39,15 @@ class Tweet: NSObject {
             tweets.append(tweet)
         }
         return tweets
+    }
+    
+    class func sendTweet(status: String, completion: @escaping(NSDictionary?, Error?) -> Void) -> Void{
+        let parameters: [String : String] = ["status": "\(status)"]
+        TwitterClient.sharedInstance.post("1.1/statuses/update.json", parameters: parameters, success: { (task: URLSessionDataTask, response: Any) in
+            completion((response as! NSDictionary), nil)
+        }) { (task: URLSessionDataTask?, error: Error?) in
+            completion(nil, error)
+        }
+    
     }
 }

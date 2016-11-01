@@ -8,21 +8,59 @@
 
 import UIKit
 
-class ComposeTweetViewController: UIViewController {
-    var author: User!
+class ComposeTweetViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate {
+    @IBOutlet weak var profileImageView: UIImageView!
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var screenNameLabel: UILabel!
+    @IBOutlet weak var tweetCharCountBarButton: UIBarButtonItem!
+    var status: String?
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        var profileImageView: UIImageView
-//        profileImageView.setImageWith(<#T##url: URL##URL#>)
-        var profileBarButton: UIBarButtonItem = UIBarButtonItem
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        self.setup()
     }
     
-
+    // MARK: - Actions
+    @IBAction func cancel(){
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func tweet(){
+        self.view.endEditing(true)
+        Tweet.sendTweet(status: self.status!) { (response: NSDictionary?, error: Error?) in
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
+    // MARK: - UITableViewDelegate + UITableViewDatasource
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 236
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "composeTweetCell", for: indexPath) as! ComposeTableViewCell
+        return cell
+    }
+    
+    // MARK: - UITextView Delegate
+    func textViewDidChange(_ textView: UITextView) {
+//        lbl_count.text=[NSString stringWithFormat:@"%i",140-len];
+//        let statusLength = textView.text
+        self.status = textView.text
+    }
+    
+    // MARK: - Utils
+    fileprivate func setup(){
+        self.profileImageView.setImageWith(TwitterClient.sharedInstance.currentUser.profileUrl!)
+        self.profileImageView.layer.cornerRadius = 5
+        self.profileImageView.clipsToBounds = true
+        self.nameLabel.text = TwitterClient.sharedInstance.currentUser.name
+        self.screenNameLabel.text = TwitterClient.sharedInstance.currentUser.screenname
+    }
     /*
     // MARK: - Navigation
 

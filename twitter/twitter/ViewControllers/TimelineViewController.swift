@@ -16,6 +16,7 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
     let refreshControl: UIRefreshControl! = UIRefreshControl()
     private var tweets: [Tweet] = []
     private var selectedTweet: Tweet!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setup()
@@ -45,7 +46,7 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
             let date1 = calender.startOfDay(for: createdAtDate)
             let date2 = calender.startOfDay(for: Date())
             let components = calender.dateComponents(Set<Calendar.Component>([.day]), from: date1, to: date2)
-            cell.daysAgoLabel.text = "\(components.day)"
+            cell.daysAgoLabel.text = "\(components.day!)d"
         }
         if let user = tweet.author {
             cell.nameLabel.text = user.name
@@ -68,7 +69,16 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
     // MARK: - Utils
     
     func loadTweets(){
-    
+        let latestTweet = self.tweets.first
+        User.getTimeline(count: 20, sinceId: (latestTweet?.stringId)!) { (tweets: [Tweet]?, error: Error?) in
+            if let tweets = tweets{
+                self.tweets = tweets + self.tweets
+            }
+            self.tableView.reloadData()
+            if self.refreshControl.isRefreshing{
+                self.refreshControl.endRefreshing()
+            }
+        }
     }
     
     fileprivate func setup(){
@@ -100,8 +110,8 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
             let vc = segue.destination as! TweetDetailViewController
             vc.tweet = self.selectedTweet
         }else{
-            let vc = segue.destination as! ComposeTweetViewController
-            vc.author = 
+//            let nav = segue.destination as! UINavigationController
+//            let vc = nav.viewControllers.first as! ComposeTweetViewController
         }
         
     }

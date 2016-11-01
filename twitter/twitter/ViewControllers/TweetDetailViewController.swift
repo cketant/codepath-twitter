@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate {
     
     var tweet: Tweet!
     
@@ -27,11 +27,9 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
         cell.screenNameLabel.text = self.tweet.author?.screenname
         cell.contentTextLabel.text = self.tweet.text
         if let createdAtDate = tweet.timestamp  {
-            let calender = Calendar.current
-            let date1 = calender.startOfDay(for: createdAtDate)
-            let date2 = calender.startOfDay(for: Date())
-            let components = calender.dateComponents(Set<Calendar.Component>([.day]), from: date1, to: date2)
-            cell.createdAtLabel.text = "\(components.day)"
+            let formatter = DateFormatter()
+            formatter.dateFormat = "MM/dd/yy, hh:mm a"
+            cell.createdAtLabel.text = formatter.string(from: createdAtDate)
         }
         if let user = tweet.author {
             cell.nameLabel.text = user.name
