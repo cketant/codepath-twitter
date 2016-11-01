@@ -38,6 +38,9 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
         let alert = UIAlertController(title: "", message: "Are you sure you want to signout?", preferredStyle: .alert)
         let ok = UIAlertAction(title: "Ok", style: .destructive) { (action: UIAlertAction) in
             TwitterClient.sharedInstance.deauthorize()
+            let defaults = UserDefaults.standard
+            defaults.removeObject(forKey: "kAccessToken")
+            defaults.removeObject(forKey: "kSecret")
             let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
             let nav = storyboard.instantiateViewController(withIdentifier: "LoginNavigationController") as! UINavigationController
             DispatchQueue.main.async {
@@ -118,13 +121,14 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
                 self.tweets = tweets + self.tweets
                 if tweets.count > 0{
                     DispatchQueue.main.async {
-                        if self.refreshControl.isRefreshing{
-                            self.refreshControl.endRefreshing()
-                        }
                         self.tableView.reloadData()
                     }
                 }
             }
+            if self.refreshControl.isRefreshing{
+                self.refreshControl.endRefreshing()
+            }
+
         }
     }
     
