@@ -66,13 +66,22 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
         cell.contentTextLabel.text = tweet.text
         if let createdAtDate = tweet.timestamp  {
             let calender = Calendar.current
-            let date1 = calender.startOfDay(for: createdAtDate)
-            let date2 = calender.startOfDay(for: Date())
-            let components = calender.dateComponents(Set<Calendar.Component>([.month, .day, .hour, .minute, .second]), from: date1, to: date2)
-            if components.day! < 1{
-                cell.daysAgoLabel.text = "\(components.hour!)h"
-            }else if(components.day! > 0){
+            let components = calender.dateComponents(Set<Calendar.Component>([.year, .month, .day, .hour, .minute, .second]), from: createdAtDate, to: Date())
+
+            if components.year! > 0{
+                let formatter = DateFormatter()
+                formatter.dateStyle = .short
+                cell.daysAgoLabel.text = "\(formatter.string(from: createdAtDate))"
+            }else if(components.month! > 0){
+                cell.daysAgoLabel.text = "\(components.month!)m"
+            }else if components.day! > 0{
                 cell.daysAgoLabel.text = "\(components.day!)d"
+            }else if(components.hour! > 0){
+                cell.daysAgoLabel.text = "\(components.hour!)h"
+            }else if(components.minute! > 0){
+                cell.daysAgoLabel.text = "\(components.minute!)M"
+            }else{
+                cell.daysAgoLabel.text = "\(components.second!)s"
             }
         }
         if let user = tweet.author {
