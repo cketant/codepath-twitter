@@ -33,7 +33,7 @@ class User: NSObject {
         }
         TwitterClient.sharedInstance.get("1.1/statuses/home_timeline.json", parameters: parameters, success: { (task: URLSessionDataTask, response: Any) in
             if let response = response as? [NSDictionary]{
-                let sortedTweets = Tweet.tweetsWithArray(dictionaries: response).sorted(by: {$0.timestamp?.compare($1.timestamp!) == .orderedAscending})
+                let sortedTweets = Tweet.tweetsWithArray(dictionaries: response).sorted(by: {$0.timestamp?.compare($1.timestamp!) == .orderedDescending})
                 completion(sortedTweets, nil)
             }
             }, failure: {(task: URLSessionDataTask?, error: Error) in

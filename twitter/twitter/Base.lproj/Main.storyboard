@@ -11,7 +11,7 @@
         <!--Login View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="LoginViewController" customModule="twitter" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginViewController" id="BYZ-38-t0r" customClass="LoginViewController" customModule="twitter" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -142,7 +142,11 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Home" id="zIB-t1-Uat">
-                        <barButtonItem key="leftBarButtonItem" title="Sign Out" id="wRf-e9-KM5"/>
+                        <barButtonItem key="leftBarButtonItem" title="Sign Out" id="wRf-e9-KM5">
+                            <connections>
+                                <action selector="signout" destination="285-dC-5jh" id="qkb-Kf-x64"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="New" id="Xz8-Mh-YOD">
                             <connections>
                                 <segue destination="R8I-Zq-bnr" kind="presentation" id="roX-pE-4uQ"/>
@@ -219,7 +223,7 @@
                                             <frame key="frameInset" width="375" height="236"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="DJS-lr-zh8">
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DJS-lr-zh8">
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -268,6 +272,7 @@
                         <outlet property="nameLabel" destination="PgO-V2-MZL" id="QON-5y-AVh"/>
                         <outlet property="profileImageView" destination="iOo-k3-BVb" id="jui-Z4-gdM"/>
                         <outlet property="screenNameLabel" destination="CwN-Ee-52U" id="b5v-FS-ruC"/>
+                        <outlet property="sendTweetBarButton" destination="EKI-Yb-HRO" id="qW7-9C-CS5"/>
                         <outlet property="tweetCharCountBarButton" destination="VSG-80-HRl" id="HRO-Li-kva"/>
                     </connections>
                 </viewController>

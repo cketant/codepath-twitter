@@ -9,7 +9,7 @@
 import UIKit
 import MBProgressHUD
 
-class TimelineViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate {
+class TimelineViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate, NewComposedTweetDelegate {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var loadingActivity: UIActivityIndicatorView!
     private var loadingMoreView: InfiniteScrollActivityView!
@@ -33,6 +33,29 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
+    // MARK: - Actions
+    @IBAction func signout(){
+        let alert = UIAlertController(title: "", message: "Are you sure you want to signout?", preferredStyle: .alert)
+        let ok = UIAlertAction(title: "Ok", style: .destructive) { (action: UIAlertAction) in
+            TwitterClient.sharedInstance.deauthorize()
+            let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
+            let nav = storyboard.instantiateViewController(withIdentifier: "LoginNavigationController") as! UINavigationController
+            DispatchQueue.main.async {
+                let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                appDelegate.window?.rootViewController = nav
+            }
+
+        }
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel) { (action: UIAlertAction) in
+            
+        }
+        alert.addAction(cancel)
+        alert.addAction(ok)
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    // MARK: - UITableView delegate+datasource
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.tweets.count
     }
@@ -45,8 +68,12 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
             let calender = Calendar.current
             let date1 = calender.startOfDay(for: createdAtDate)
             let date2 = calender.startOfDay(for: Date())
-            let components = calender.dateComponents(Set<Calendar.Component>([.day]), from: date1, to: date2)
-            cell.daysAgoLabel.text = "\(components.day!)d"
+            let components = calender.dateComponents(Set<Calendar.Component>([.month, .day, .hour, .minute, .second]), from: date1, to: date2)
+            if components.day! < 1{
+                cell.daysAgoLabel.text = "\(components.hour!)h"
+            }else if(components.day! > 0){
+                cell.daysAgoLabel.text = "\(components.day!)d"
+            }
         }
         if let user = tweet.author {
             cell.nameLabel.text = user.name
@@ -66,6 +93,13 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
         self.performSegue(withIdentifier: "detailTweetSegue", sender: nil)
     }
     
+    // MARK: - NewComposedTweetDelegate
+    
+    func updateCache(tweet: Tweet){
+        self.tweets.insert(tweet, at: 0)
+        self.tableView.reloadData()
+    }
+    
     // MARK: - Utils
     
     func loadTweets(){
@@ -73,10 +107,14 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
         User.getTimeline(count: 20, sinceId: (latestTweet?.stringId)!) { (tweets: [Tweet]?, error: Error?) in
             if let tweets = tweets{
                 self.tweets = tweets + self.tweets
-            }
-            self.tableView.reloadData()
-            if self.refreshControl.isRefreshing{
-                self.refreshControl.endRefreshing()
+                if tweets.count > 0{
+                    DispatchQueue.main.async {
+                        if self.refreshControl.isRefreshing{
+                            self.refreshControl.endRefreshing()
+                        }
+                        self.tableView.reloadData()
+                    }
+                }
             }
         }
     }
@@ -110,8 +148,9 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
             let vc = segue.destination as! TweetDetailViewController
             vc.tweet = self.selectedTweet
         }else{
-//            let nav = segue.destination as! UINavigationController
-//            let vc = nav.viewControllers.first as! ComposeTweetViewController
+            let nav = segue.destination as! UINavigationController
+            let vc = nav.viewControllers.first as! ComposeTweetViewController
+            vc.newComponsedTweetDelegate = self
         }
         
     }

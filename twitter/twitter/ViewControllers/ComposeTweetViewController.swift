@@ -8,11 +8,16 @@
 
 import UIKit
 
+protocol NewComposedTweetDelegate: class {
+    func updateCache(tweet: Tweet)
+}
 class ComposeTweetViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate {
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var screenNameLabel: UILabel!
     @IBOutlet weak var tweetCharCountBarButton: UIBarButtonItem!
+    @IBOutlet weak var sendTweetBarButton: UIBarButtonItem!
+    weak var newComponsedTweetDelegate: NewComposedTweetDelegate?
     var status: String?
 
     override func viewDidLoad() {
@@ -21,6 +26,7 @@ class ComposeTweetViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     // MARK: - Actions
+    
     @IBAction func cancel(){
         self.dismiss(animated: true, completion: nil)
     }
@@ -28,6 +34,11 @@ class ComposeTweetViewController: UIViewController, UITableViewDelegate, UITable
     @IBAction func tweet(){
         self.view.endEditing(true)
         Tweet.sendTweet(status: self.status!) { (response: NSDictionary?, error: Error?) in
+            if let response = response{
+                DispatchQueue.main.async {
+                    self.newComponsedTweetDelegate?.updateCache(tweet: Tweet(dictionary: response))
+                }
+            }
             self.dismiss(animated: true, completion: nil)
         }
     }
@@ -48,8 +59,15 @@ class ComposeTweetViewController: UIViewController, UITableViewDelegate, UITable
     
     // MARK: - UITextView Delegate
     func textViewDidChange(_ textView: UITextView) {
-//        lbl_count.text=[NSString stringWithFormat:@"%i",140-len];
-//        let statusLength = textView.text
+        let statusLength = (140 - textView.text.characters.count)
+        if statusLength < 0 {
+            self.tweetCharCountBarButton.tintColor = UIColor.red
+            self.sendTweetBarButton.isEnabled = false
+        }else{
+            self.tweetCharCountBarButton.tintColor = UIColor.darkGray
+            self.sendTweetBarButton.isEnabled = true
+        }
+        self.tweetCharCountBarButton.title = "\(statusLength)"
         self.status = textView.text
     }
     
@@ -60,15 +78,6 @@ class ComposeTweetViewController: UIViewController, UITableViewDelegate, UITable
         self.profileImageView.clipsToBounds = true
         self.nameLabel.text = TwitterClient.sharedInstance.currentUser.name
         self.screenNameLabel.text = TwitterClient.sharedInstance.currentUser.screenname
+        self.tweetCharCountBarButton.tintColor = UIColor.darkGray
     }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
