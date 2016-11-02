@@ -233,6 +233,13 @@
                                                         <outlet property="delegate" destination="v2T-pw-WDy" id="ZNi-aq-aM6"/>
                                                     </connections>
                                                 </textView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="What's happening?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8cj-l3-fGo">
+                                                    <frame key="frameInset" minX="8" minY="8" width="174" height="24"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
+                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="DJS-lr-zh8" firstAttribute="leading" secondItem="Sx8-cf-v0V" secondAttribute="leading" constant="8" id="T2G-2O-5pp"/>
@@ -242,6 +249,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="placeholderLabel" destination="8cj-l3-fGo" id="6jT-ie-jeW"/>
                                             <outlet property="tweetTextView" destination="DJS-lr-zh8" id="vH5-HX-ojD"/>
                                         </connections>
                                     </tableViewCell>
@@ -352,6 +360,9 @@
                                                                 <constraint firstAttribute="height" constant="20" id="qZx-pE-Gj5"/>
                                                             </constraints>
                                                             <state key="normal" title="Button" image="left_filled"/>
+                                                            <connections>
+                                                                <action selector="reply" destination="l0A-gi-0Sd" eventType="touchUpInside" id="PDG-J2-AFk"/>
+                                                            </connections>
                                                         </button>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1i8-L7-QNr">
                                                             <constraints>
@@ -359,6 +370,9 @@
                                                                 <constraint firstAttribute="height" constant="20" id="kF2-ft-Wcv"/>
                                                             </constraints>
                                                             <state key="normal" title="Button" image="retweet_filled"/>
+                                                            <connections>
+                                                                <action selector="retweet" destination="l0A-gi-0Sd" eventType="touchUpInside" id="zt7-TU-1kc"/>
+                                                            </connections>
                                                         </button>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zs3-Ws-zq9">
                                                             <constraints>
@@ -366,6 +380,9 @@
                                                                 <constraint firstAttribute="height" constant="20" id="rzN-CT-PzQ"/>
                                                             </constraints>
                                                             <state key="normal" title="Button" image="star_filled"/>
+                                                            <connections>
+                                                                <action selector="favorite" destination="l0A-gi-0Sd" eventType="touchUpInside" id="2U9-Po-krh"/>
+                                                            </connections>
                                                         </button>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wXD-5f-rp7">
                                                             <constraints>
@@ -373,6 +390,9 @@
                                                                 <constraint firstAttribute="width" constant="20" id="fRN-nE-sxa"/>
                                                             </constraints>
                                                             <state key="normal" title="Button" image="message"/>
+                                                            <connections>
+                                                                <action selector="directMessage" destination="l0A-gi-0Sd" eventType="touchUpInside" id="9v2-My-ahc"/>
+                                                            </connections>
                                                         </button>
                                                     </subviews>
                                                 </stackView>
@@ -440,9 +460,13 @@
                                         <connections>
                                             <outlet property="contentTextLabel" destination="tzG-1M-Git" id="bTY-k7-s70"/>
                                             <outlet property="createdAtLabel" destination="q0O-Aq-oNE" id="tkl-19-hsd"/>
+                                            <outlet property="directMessageButton" destination="wXD-5f-rp7" id="2h5-Qc-1eW"/>
+                                            <outlet property="favoriteButton" destination="Zs3-Ws-zq9" id="UUJ-hE-sL0"/>
                                             <outlet property="likesLabel" destination="JaY-ei-1m2" id="49e-tb-KPG"/>
                                             <outlet property="nameLabel" destination="qez-bJ-yvI" id="60y-Sg-Mu1"/>
                                             <outlet property="profileImageView" destination="WKg-dG-aT4" id="lmx-9v-84d"/>
+                                            <outlet property="replyButton" destination="ysv-mN-tOD" id="7Ud-Vl-vAS"/>
+                                            <outlet property="retweetButton" destination="1i8-L7-QNr" id="szn-R6-w0F"/>
                                             <outlet property="retweetsLabel" destination="GKl-cq-plT" id="8DY-IZ-TaX"/>
                                             <outlet property="screenNameLabel" destination="ljr-FZ-cHN" id="2OR-Tb-8bG"/>
                                         </connections>
@@ -462,9 +486,7 @@
                             <constraint firstItem="9yl-6C-H6y" firstAttribute="top" secondItem="7fF-G9-xX5" secondAttribute="bottom" id="rK7-Vt-BaS"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Tweet" id="Cdz-vV-Zwt">
-                        <barButtonItem key="rightBarButtonItem" title="Reply" id="5O1-Em-B8s"/>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Tweet" id="Cdz-vV-Zwt"/>
                     <connections>
                         <outlet property="tableView" destination="7fF-G9-xX5" id="gOo-Kh-GzL"/>
                     </connections>

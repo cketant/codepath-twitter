@@ -15,12 +15,16 @@ class Tweet: NSObject {
     var retweetCount: Int = 0
     var favoritesCount: Int = 0
     var author: User?
+    var isRetweeted: Bool?
+    var isFavorited: Bool?
     
     init(dictionary: NSDictionary) {
         self.stringId = dictionary["id_str"] as? String
         self.text = dictionary["text"] as? String
         self.retweetCount = (dictionary["retweet_count"] as? Int) ?? 0
         self.favoritesCount = (dictionary["favourites_count"] as? Int) ?? 0
+        self.isFavorited = (dictionary["favorited"] as? Bool) ?? false
+        self.isRetweeted = (dictionary["retweeted"] as? Bool) ?? false
         if let createdTimeStampStr = dictionary["created_at"] as? String{
             let formatter = DateFormatter()
             formatter.dateFormat = "EEE MMM dd HH:mm:ss Z yyyy"
@@ -28,6 +32,45 @@ class Tweet: NSObject {
         }
         if let userDict = dictionary["user"]{
             self.author = User(dictionary: userDict as! NSDictionary)
+        }
+    }
+    
+    public func retweet(isRetweeted: Bool){
+        let tweetId = self.stringId!
+        if isRetweeted {
+            TwitterClient.sharedInstance.post("1.1/statuses/retweet/\(tweetId).json", parameters: nil, success: {(task: URLSessionDataTask, response: Any) in
+            }){(task: URLSessionDataTask?, error: Error?) in
+                if error == nil{
+                    self.isRetweeted = true
+                }
+            }
+        }else{
+            TwitterClient.sharedInstance.post("1.1/statuses/unretweet/\(tweetId).json", parameters: nil, success: {(task: URLSessionDataTask, response: Any) in
+            }){(task: URLSessionDataTask?, error: Error?) in
+                if error == nil{
+                    self.isRetweeted = false
+                }
+            }
+        }
+    }
+    
+    public func favorite(isFavorited: Bool){
+        let tweetId = self.stringId!
+        let parameters: [String : String] = ["id": "\(tweetId)"]
+        if isFavorited {
+            TwitterClient.sharedInstance.post("1.1/favorites/create.json", parameters: parameters, success: {(task: URLSessionDataTask, response: Any) in
+            }){(task: URLSessionDataTask?, error: Error?) in
+                if error == nil{
+                    self.isFavorited = true
+                }
+            }
+        }else{
+            TwitterClient.sharedInstance.post("1.1/favorites/destroy.json", parameters: parameters, success: {(task: URLSessionDataTask, response: Any) in
+            }){(task: URLSessionDataTask?, error: Error?) in
+                if error == nil{
+                    self.isFavorited = false
+                }
+            }
         }
     }
     

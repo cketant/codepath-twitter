@@ -11,6 +11,7 @@ import UIKit
 protocol NewComposedTweetDelegate: class {
     func updateCache(tweet: Tweet)
 }
+
 class ComposeTweetViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate {
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
@@ -18,6 +19,7 @@ class ComposeTweetViewController: UIViewController, UITableViewDelegate, UITable
     @IBOutlet weak var tweetCharCountBarButton: UIBarButtonItem!
     @IBOutlet weak var sendTweetBarButton: UIBarButtonItem!
     weak var newComponsedTweetDelegate: NewComposedTweetDelegate?
+    var placeholderLabel: UILabel!
     var status: String?
 
     override func viewDidLoad() {
@@ -54,11 +56,24 @@ class ComposeTweetViewController: UIViewController, UITableViewDelegate, UITable
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "composeTweetCell", for: indexPath) as! ComposeTableViewCell
+        self.placeholderLabel = cell.placeholderLabel
         return cell
     }
     
     // MARK: - UITextView Delegate
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        self.placeholderLabel.isHidden = true
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        self.placeholderLabel.isHidden = false
+    }
+    
     func textViewDidChange(_ textView: UITextView) {
+        if textView.text.isEmpty {
+            self.placeholderLabel.isHidden = false
+        }
         let statusLength = (140 - textView.text.characters.count)
         if statusLength < 0 {
             self.tweetCharCountBarButton.tintColor = UIColor.red

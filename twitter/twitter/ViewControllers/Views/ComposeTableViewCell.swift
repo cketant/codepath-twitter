@@ -10,6 +10,8 @@ import UIKit
 
 class ComposeTableViewCell: UITableViewCell {
     @IBOutlet weak var tweetTextView: UITextView!
+    @IBOutlet weak var placeholderLabel: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

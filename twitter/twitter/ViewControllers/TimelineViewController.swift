@@ -16,6 +16,7 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
     let refreshControl: UIRefreshControl! = UIRefreshControl()
     private var tweets: [Tweet] = []
     private var selectedTweet: Tweet!
+    private var isTweetsLoading: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -105,6 +106,28 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
         self.performSegue(withIdentifier: "detailTweetSegue", sender: nil)
     }
     
+    // MARK: - ScrollViewDelegate
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if !self.isTweetsLoading {
+            // Calculate the position of one screen length before the bottom of the results
+            let scrollViewContentHeight = self.tableView.contentSize.height
+            let scrollOffsetThreshold = scrollViewContentHeight - self.tableView.bounds.size.height
+            
+            // When the user has scrolled past the threshold, start requesting
+            if(scrollView.contentOffset.y > scrollOffsetThreshold && tableView.isDragging) {
+                self.isTweetsLoading = true
+                
+                // Update position of loadingMoreView, and start loading indicator
+                let frame = CGRect(x: 0, y: self.tableView.contentSize.height, width: self.tableView.bounds.size.width, height: InfiniteScrollActivityView.defaultHeight)
+                self.loadingMoreView.frame = frame
+                self.loadingMoreView.startAnimating()
+                self.loadNewTweets()
+            }
+            
+        }
+    }
+    
     // MARK: - NewComposedTweetDelegate
     
     func updateCache(tweet: Tweet){
@@ -114,7 +137,7 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
     
     // MARK: - Utils
     
-    func loadTweets(){
+    @objc fileprivate func loadNewTweets(){
         let latestTweet = self.tweets.first
         User.getTimeline(count: 20, sinceId: (latestTweet?.stringId)!) { (tweets: [Tweet]?, error: Error?) in
             if let tweets = tweets{
@@ -127,6 +150,10 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
             }
             if self.refreshControl.isRefreshing{
                 self.refreshControl.endRefreshing()
+            }
+            if self.isTweetsLoading{
+                self.isTweetsLoading = false
+                self.loadingMoreView.stopAnimating()
             }
 
         }
@@ -145,7 +172,7 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
         insets.bottom += InfiniteScrollActivityView.defaultHeight;
         self.tableView.contentInset = insets
         // pull to refresh
-        self.refreshControl.addTarget(self, action: #selector(loadTweets), for: UIControlEvents.valueChanged)
+        self.refreshControl.addTarget(self, action: #selector(loadNewTweets), for: UIControlEvents.valueChanged)
         self.tableView.insertSubview(self.refreshControl, at: 0)
         // initial loading
         self.loadingActivity.hidesWhenStopped = true

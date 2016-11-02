@@ -25,11 +25,14 @@ class User: NSObject {
         self.tagline = dictionary["description"] as? String
     }
     
-    class func getTimeline(count: Int = 20, sinceId: String = "", completion: @escaping ([Tweet]?, Error?) -> Void) -> Void {
+    class func getTimeline(count: Int = 20, sinceId: String = "", maxId: String = "", completion: @escaping ([Tweet]?, Error?) -> Void) -> Void {
         var parameters: [String : AnyObject] = [:]
         parameters["count"] = count as AnyObject?
         if !sinceId.isEmpty {
             parameters["since_id"] = sinceId as AnyObject?
+        }
+        if !maxId.isEmpty {
+            parameters["maxId"] = maxId as AnyObject?
         }
         TwitterClient.sharedInstance.get("1.1/statuses/home_timeline.json", parameters: parameters, success: { (task: URLSessionDataTask, response: Any) in
             if let response = response as? [NSDictionary]{
