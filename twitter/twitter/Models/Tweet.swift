@@ -55,8 +55,8 @@ class Tweet: NSObject {
     }
     
     public func favorite(isFavorited: Bool){
-        let tweetId = self.stringId!
-        let parameters: [String : String] = ["id": "\(tweetId)"]
+        let tweetId: Int = Int(self.stringId!)!
+        let parameters: [String : AnyObject] = ["id": tweetId as AnyObject]
         if isFavorited {
             TwitterClient.sharedInstance.post("1.1/favorites/create.json", parameters: parameters, success: {(task: URLSessionDataTask, response: Any) in
             }){(task: URLSessionDataTask?, error: Error?) in
