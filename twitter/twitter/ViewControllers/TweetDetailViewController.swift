@@ -38,6 +38,8 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
         cell.contentTextLabel.text = self.tweet.text
         cell.retweetsLabel.text = "\(self.tweet.retweetCount)"
         cell.likesLabel.text = "\(self.tweet.favoritesCount)"
+        cell.updateFavoriteButton(isFavorited: self.tweet.isFavorited!)
+        cell.updateRetweetButton(isRetweeted: self.tweet.isRetweeted!)
         if let createdAtDate = tweet.timestamp  {
             let formatter = DateFormatter()
             formatter.dateFormat = "MM/dd/yy, hh:mm a"
