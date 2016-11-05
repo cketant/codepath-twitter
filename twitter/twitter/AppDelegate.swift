@@ -21,24 +21,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             defaults.set(accessToken?.token, forKey: "kAccessToken")
             defaults.set(accessToken?.secret, forKey: "kSecret")
             let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-            let nav = storyboard.instantiateViewController(withIdentifier: "mainNavigationController") as! UINavigationController
+            let hamburgerViewController = storyboard.instantiateViewController(
+                withIdentifier: "hamburgerViewController"
+                ) as! HamburgerViewController
+            let menuViewController = storyboard.instantiateViewController(
+                withIdentifier: "menuViewController"
+                ) as! MenuViewController
+            menuViewController.hamburgerViewController = hamburgerViewController
+            hamburgerViewController.menuViewController = menuViewController
             TwitterClient.sharedInstance.getCurrentUser(completion: { (currentUser: User?, error: Error?) in
                 DispatchQueue.main.async {
-                    self.window?.rootViewController = nav
+                    self.window?.rootViewController = hamburgerViewController
                 }
-
             })
             
             }, failure: { (error: Error?) in
-                print(error?.localizedDescription)
+                print(error?.localizedDescription as Any)
         })
         return true
     }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         UINavigationBar.appearance().barTintColor = UIColor.white
-        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName:UIColor(red: (0/255.0), green: (172/255.0), blue: (237/255.0), alpha: 1.0)]
-        UIBarButtonItem.appearance().tintColor = UIColor(red: (0/255.0), green: (172/255.0), blue: (237/255.0), alpha: 1.0)
+        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName:
+            UIColor(red: (0/255.0), green: (172/255.0), blue: (237/255.0), alpha: 1.0)]
+        UIBarButtonItem.appearance().tintColor = UIColor(
+            red: (0/255.0), green: (172/255.0), blue: (237/255.0), alpha: 1.0
+        )
         let defaults = UserDefaults.standard
         if  defaults.object(forKey: "kAccessToken") != nil && defaults.object(forKey: "kSecret") != nil{
             let secret: String = defaults.object(forKey: "kSecret") as! String
@@ -47,13 +56,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             TwitterClient.sharedInstance.requestSerializer.saveAccessToken(accessToken)
             if TwitterClient.sharedInstance.isAuthorized {
                 let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-                    let nav = storyboard.instantiateViewController(withIdentifier: "mainNavigationController") as! UINavigationController
-                    TwitterClient.sharedInstance.getCurrentUser(completion: { (currentUser: User?, error: Error?) in
-                        DispatchQueue.main.async {
-                            self.window?.rootViewController = nav
-                        }
-                        
-                    })
+                let hamburgerViewController = storyboard.instantiateViewController(
+                    withIdentifier: "hamburgerViewController"
+                ) as! HamburgerViewController
+                let menuViewController = storyboard.instantiateViewController(
+                    withIdentifier: "menuViewController"
+                ) as! MenuViewController
+                menuViewController.hamburgerViewController = hamburgerViewController
+                hamburgerViewController.menuViewController = menuViewController
+                TwitterClient.sharedInstance.getCurrentUser(completion: { (currentUser: User?, error: Error?) in
+                    DispatchQueue.main.async {
+                        self.window?.rootViewController = hamburgerViewController
+                    }
+                    
+                })
                 }
         }
         return true
