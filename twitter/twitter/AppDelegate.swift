@@ -42,12 +42,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        UINavigationBar.appearance().barTintColor = UIColor.white
+        UINavigationBar.appearance().barTintColor = UIColor(red: (0/255.0), green: (172/255.0), blue: (237/255.0), alpha: 1.0)
         UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName:
-            UIColor(red: (0/255.0), green: (172/255.0), blue: (237/255.0), alpha: 1.0)]
-        UIBarButtonItem.appearance().tintColor = UIColor(
-            red: (0/255.0), green: (172/255.0), blue: (237/255.0), alpha: 1.0
-        )
+            UIColor.white]
+        UIBarButtonItem.appearance().tintColor = UIColor.white
+        
         let defaults = UserDefaults.standard
         if  defaults.object(forKey: "kAccessToken") != nil && defaults.object(forKey: "kSecret") != nil{
             let secret: String = defaults.object(forKey: "kSecret") as! String

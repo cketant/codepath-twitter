@@ -72,6 +72,28 @@ class User: NSObject {
         })
     }
     
+    class func getMentionsTimeline(count: Int = 20,
+                                   sinceId: String = "",
+                                   maxId: String = "",
+                                   completion: @escaping ([Tweet]?, Error?) -> Void) -> Void {
+        var parameters: [String : AnyObject] = [:]
+        parameters["count"] = count as AnyObject?
+        if !sinceId.isEmpty {
+            parameters["since_id"] = sinceId as AnyObject?
+        }
+        if !maxId.isEmpty {
+            parameters["maxId"] = maxId as AnyObject?
+        }
+        TwitterClient.sharedInstance.get("1.1/statuses/mentions_timeline.json", parameters: parameters, success: { (task: URLSessionDataTask, response: Any) in
+            if let response = response as? [NSDictionary]{
+                let sortedTweets = Tweet.tweetsWithArray(dictionaries: response).sorted(by: {$0.timestamp?.compare($1.timestamp!) == .orderedDescending})
+                completion(sortedTweets, nil)
+            }
+        }, failure: {(task: URLSessionDataTask?, error: Error) in
+            completion(nil, error)
+        })
+    }
+    
     func getUserTimeline(count: Int = 20,
                            sinceId: String = "",
                            maxId: String = "",

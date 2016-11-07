@@ -100,8 +100,7 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
     
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let nav = segue.destination as! UINavigationController
-        let vc = nav.viewControllers.first as! ProfileViewController
+        let vc = segue.destination as! ProfileViewController
         vc.user = self.tweet.author
             
     }

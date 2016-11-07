@@ -29,6 +29,9 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.profileViewNavigationController = storyboard.instantiateViewController(
             withIdentifier: "profileNavigationController"
         )
+        self.mentionsViewNavigationController = storyboard.instantiateViewController(
+            withIdentifier: "mentionsTimelineNavigationController"
+        )
         
         var containerizedTimeline = ContainerizedViewController()
         containerizedTimeline.title = "Timeline"
@@ -36,14 +39,19 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         var containerizedProfile = ContainerizedViewController()
         containerizedProfile.title = "Me"
         containerizedProfile.viewController = self.profileViewNavigationController
+        var containerizedMentions = ContainerizedViewController()
+        containerizedMentions.title = "Mentions"
+        containerizedMentions.viewController = self.mentionsViewNavigationController
         
         self.viewControllers.append(containerizedTimeline)
         self.viewControllers.append(containerizedProfile)
-        self.hamburgerViewController.contentViewController = self.profileViewNavigationController
+        self.viewControllers.append(containerizedMentions)
+        
+        self.hamburgerViewController.contentViewController = self.timelineViewNavigationController
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return self.viewControllers.count
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

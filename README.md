@@ -1,6 +1,6 @@
 # Project 3 - *Twitter Clone*
 
-**Name of your app** is a basic twitter app to read and compose tweets from the [Twitter API](https://apps.twitter.com/).
+**Twitter Clone** is a basic twitter app to read and compose tweets from the [Twitter API](https://apps.twitter.com/).
 
 Time spent: **15** hours spent in total
 

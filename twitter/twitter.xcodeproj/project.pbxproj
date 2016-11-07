@@ -20,6 +20,7 @@
 		855074981DC268550082D340 /* TimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855074971DC268550082D340 /* TimelineViewController.swift */; };
 		8550749B1DC289CC0082D340 /* TweetTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8550749A1DC289CC0082D340 /* TweetTableViewCell.swift */; };
 		8550749D1DC2A8510082D340 /* InfiniteScrollActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8550749C1DC2A8510082D340 /* InfiniteScrollActivityView.swift */; };
+		85510F141DD0D71400039E42 /* MentionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85510F131DD0D71400039E42 /* MentionsViewController.swift */; };
 		858AF9481DC553D800DDA9E7 /* TweetDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858AF9471DC553D800DDA9E7 /* TweetDetailTableViewCell.swift */; };
 		85E1236A1DCE542B00810593 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E123691DCE542B00810593 /* LoginViewController.swift */; };
 		85E1236C1DCE548B00810593 /* HamburgerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E1236B1DCE548B00810593 /* HamburgerViewController.swift */; };
@@ -48,6 +49,7 @@
 		855074971DC268550082D340 /* TimelineViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TimelineViewController.swift; path = ViewControllers/TimelineViewController.swift; sourceTree = "<group>"; };
 		8550749A1DC289CC0082D340 /* TweetTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TweetTableViewCell.swift; path = ViewControllers/Views/TweetTableViewCell.swift; sourceTree = "<group>"; };
 		8550749C1DC2A8510082D340 /* InfiniteScrollActivityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InfiniteScrollActivityView.swift; path = ViewControllers/Views/InfiniteScrollActivityView.swift; sourceTree = "<group>"; };
+		85510F131DD0D71400039E42 /* MentionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MentionsViewController.swift; path = ViewControllers/MentionsViewController.swift; sourceTree = "<group>"; };
 		858AF9471DC553D800DDA9E7 /* TweetDetailTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TweetDetailTableViewCell.swift; path = ViewControllers/Views/TweetDetailTableViewCell.swift; sourceTree = "<group>"; };
 		85E123691DCE542B00810593 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginViewController.swift; path = ViewControllers/LoginViewController.swift; sourceTree = "<group>"; };
 		85E1236B1DCE548B00810593 /* HamburgerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HamburgerViewController.swift; path = ViewControllers/HamburgerViewController.swift; sourceTree = "<group>"; };
@@ -135,6 +137,7 @@
 				85E123691DCE542B00810593 /* LoginViewController.swift */,
 				85E1236D1DCE5D6600810593 /* MenuViewController.swift */,
 				85E123721DCE944E00810593 /* ProfileViewController.swift */,
+				85510F131DD0D71400039E42 /* MentionsViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -304,6 +307,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8550749D1DC2A8510082D340 /* InfiniteScrollActivityView.swift in Sources */,
+				85510F141DD0D71400039E42 /* MentionsViewController.swift in Sources */,
 				85E1236E1DCE5D6600810593 /* MenuViewController.swift in Sources */,
 				858AF9481DC553D800DDA9E7 /* TweetDetailTableViewCell.swift in Sources */,
 				855074941DC2519D0082D340 /* User.swift in Sources */,

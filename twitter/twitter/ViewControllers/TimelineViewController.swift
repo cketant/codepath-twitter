@@ -175,7 +175,7 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
         // tableview
         self.tableView.estimatedRowHeight = 83
         self.tableView.rowHeight = UITableViewAutomaticDimension
-        // loading view
+        // loading more view
         let frame = CGRect(x: 0, y: tableView.contentSize.height, width: tableView.bounds.size.width, height: InfiniteScrollActivityView.defaultHeight)
         loadingMoreView = InfiniteScrollActivityView(frame: frame)
         loadingMoreView!.isHidden = true
@@ -200,8 +200,7 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
             let vc = segue.destination as! TweetDetailViewController
             vc.tweet = self.selectedTweet
         }else if segue.identifier == "userProfileSegue"{
-            let nav = segue.destination as! UINavigationController
-            let vc = nav.viewControllers.first as! ProfileViewController
+            let vc = segue.destination as! ProfileViewController
             vc.user = self.tappedUser
         }else{
             let nav = segue.destination as! UINavigationController
