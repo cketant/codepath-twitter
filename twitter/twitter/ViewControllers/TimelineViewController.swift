@@ -17,12 +17,13 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
     private var tweets: [Tweet] = []
     private var selectedTweet: Tweet!
     private var isTweetsLoading: Bool = false
+    private var tappedUser: User?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setup()
         self.loadingActivity.startAnimating()
-        User.getTimeline { (tweets: [Tweet]?, error: Error?) in
+        User.getHomeTimeline { (tweets: [Tweet]?, error: Error?) in
             if let tweets = tweets{
                 self.tweets = tweets
             }
@@ -35,6 +36,12 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     // MARK: - Actions
+    
+    @objc fileprivate func userProfileTapped(_ sender: UITapGestureRecognizer) {
+        self.tappedUser = self.tweets[(sender.view?.tag)!].author
+        self.performSegue(withIdentifier: "userProfileSegue", sender: nil)
+    }
+    
     @IBAction func signout(){
         let alert = UIAlertController(title: "", message: "Are you sure you want to signout?", preferredStyle: .alert)
         let ok = UIAlertAction(title: "Ok", style: .destructive) { (action: UIAlertAction) in
@@ -91,6 +98,11 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
         if let user = tweet.author {
             cell.nameLabel.text = user.name
             cell.screenNameLabel.text = "@\(user.screenname!)"
+            cell.profileImageView.tag = indexPath.row
+            let tapGestureRecognizer = UITapGestureRecognizer(
+                target: self, action: #selector(userProfileTapped)
+            )
+            cell.profileImageView.addGestureRecognizer(tapGestureRecognizer)
             if let url = user.profileUrl{
                 cell.profileImageView.setImageWith(url)
                 cell.profileImageView.layer.cornerRadius = 5
@@ -139,7 +151,7 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
     
     @objc fileprivate func loadNewTweets(){
         let latestTweet = self.tweets.first
-        User.getTimeline(count: 20, sinceId: (latestTweet?.stringId)!) { (tweets: [Tweet]?, error: Error?) in
+        User.getHomeTimeline(count: 20, sinceId: (latestTweet?.stringId)!) { (tweets: [Tweet]?, error: Error?) in
             if let tweets = tweets{
                 self.tweets = tweets + self.tweets
                 if tweets.count > 0{
@@ -187,6 +199,10 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
         if segue.identifier == "detailTweetSegue" {
             let vc = segue.destination as! TweetDetailViewController
             vc.tweet = self.selectedTweet
+        }else if segue.identifier == "userProfileSegue"{
+            let nav = segue.destination as! UINavigationController
+            let vc = nav.viewControllers.first as! ProfileViewController
+            vc.user = self.tappedUser
         }else{
             let nav = segue.destination as! UINavigationController
             let vc = nav.viewControllers.first as! ComposeTweetViewController

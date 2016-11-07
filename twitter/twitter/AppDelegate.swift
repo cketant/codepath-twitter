@@ -27,10 +27,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let menuViewController = storyboard.instantiateViewController(
                 withIdentifier: "menuViewController"
                 ) as! MenuViewController
-            menuViewController.hamburgerViewController = hamburgerViewController
-            hamburgerViewController.menuViewController = menuViewController
-            TwitterClient.sharedInstance.getCurrentUser(completion: { (currentUser: User?, error: Error?) in
+            User.getCurrentUser(completion: { (currentUser: User?, error: Error?) in
                 DispatchQueue.main.async {
+                    menuViewController.hamburgerViewController = hamburgerViewController
+                    hamburgerViewController.menuViewController = menuViewController
                     self.window?.rootViewController = hamburgerViewController
                 }
             })
@@ -62,10 +62,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 let menuViewController = storyboard.instantiateViewController(
                     withIdentifier: "menuViewController"
                 ) as! MenuViewController
-                menuViewController.hamburgerViewController = hamburgerViewController
-                hamburgerViewController.menuViewController = menuViewController
-                TwitterClient.sharedInstance.getCurrentUser(completion: { (currentUser: User?, error: Error?) in
+                User.getCurrentUser(completion: { (currentUser: User?, error: Error?) in
                     DispatchQueue.main.async {
+                        menuViewController.hamburgerViewController = hamburgerViewController
+                        hamburgerViewController.menuViewController = menuViewController
                         self.window?.rootViewController = hamburgerViewController
                     }
                     

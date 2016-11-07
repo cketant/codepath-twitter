@@ -88,11 +88,11 @@ class ComposeTweetViewController: UIViewController, UITableViewDelegate, UITable
     
     // MARK: - Utils
     fileprivate func setup(){
-        self.profileImageView.setImageWith(TwitterClient.sharedInstance.currentUser.profileUrl!)
+        self.profileImageView.setImageWith(User.currentUser.profileUrl!)
         self.profileImageView.layer.cornerRadius = 5
         self.profileImageView.clipsToBounds = true
-        self.nameLabel.text = TwitterClient.sharedInstance.currentUser.name
-        self.screenNameLabel.text = TwitterClient.sharedInstance.currentUser.screenname
+        self.nameLabel.text = User.currentUser.name
+        self.screenNameLabel.text = User.currentUser.screenname
         self.tweetCharCountBarButton.tintColor = UIColor.darkGray
     }
 }

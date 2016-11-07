@@ -60,6 +60,10 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
     
     // MARK: - Actions
     
+    @IBAction func userProfileTapped(_ sender: UITapGestureRecognizer) {
+        self.performSegue(withIdentifier: "userProfileSegue", sender: nil)
+    }
+    
     @IBAction func favorite(){
         self.isCellFavorited = !(self.isCellFavorited!)
         self.tweetCell.updateFavoriteButton(isFavorited: self.isCellFavorited!)
@@ -90,6 +94,16 @@ class TweetDetailViewController: UIViewController, UITableViewDelegate, UITableV
     
     @IBAction func directMessage(){
         
+    }
+    
+    // MARK: - Navigation
+    
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let nav = segue.destination as! UINavigationController
+        let vc = nav.viewControllers.first as! ProfileViewController
+        vc.user = self.tweet.author
+            
     }
     
 }

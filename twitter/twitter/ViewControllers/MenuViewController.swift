@@ -26,15 +26,24 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.timelineViewNavigationController = storyboard.instantiateViewController(
             withIdentifier: "timelineNavigationController"
         )
+        self.profileViewNavigationController = storyboard.instantiateViewController(
+            withIdentifier: "profileNavigationController"
+        )
+        
         var containerizedTimeline = ContainerizedViewController()
         containerizedTimeline.title = "Timeline"
         containerizedTimeline.viewController = self.timelineViewNavigationController
+        var containerizedProfile = ContainerizedViewController()
+        containerizedProfile.title = "Me"
+        containerizedProfile.viewController = self.profileViewNavigationController
+        
         self.viewControllers.append(containerizedTimeline)
-        self.hamburgerViewController.contentViewController = self.timelineViewNavigationController
+        self.viewControllers.append(containerizedProfile)
+        self.hamburgerViewController.contentViewController = self.profileViewNavigationController
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return 2
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
